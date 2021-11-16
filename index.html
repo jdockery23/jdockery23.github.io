@@ -1,15 +1,99 @@
-<!doctype html>
-<html>
+
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>jdockery23</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>students by major</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 </head>
 <body>
-
-<h1>GitHub Page</h1>
-
-<p> Welcome to page</p>
-
-
+    <h1>Select a Major</h1>
+    <br>
+    <button id="CIT" onclick="fun(this.id)">CIT Majors</button>
+    <button id="BUS" onclick="fun(this.id)">Business Majors</button>
+    <br>
+    <h3>We filter our dataset by major</h3>
+    <br>
+    <table id="mytable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Major</th>
+                <th>Midterm</th>
+                <th>Final</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
 </body>
+
+<script>
+    $('#mytable').hide();
+    function compare( a, b ) 
+    {
+        if ( a.name < b.name )
+        {
+            return -1;
+        }
+        if ( a.name > b.name )
+        {
+            return 1;
+        }
+        return 0;
+    }
+    function fun(button_id)
+    {
+        $.getJSON("cit5students.json", 
+            function (data) 
+            {
+                $('#mytable tbody').empty();
+                $('#mytable').show();
+                let student = '';
+                let arr1 = [];
+                let arr2 = [];
+                $.each(data, function (key, value) 
+                {
+                    if(value.major == "CIT")
+                    {
+                        arr1.push({'name':value.name,'major':value.major,'midterm':value.midterm,'final':value.final});
+                    }
+                    else
+                    {
+                        arr2.push({'name':value.name,'major':value.major,'midterm':value.midterm,'final':value.final});
+                    }
+                });
+                arr1.sort(compare);
+                arr2.sort(compare);
+                if(button_id == "CIT")
+                {
+                    for(let i=0;i<arr1.length;i++)
+                    {
+                        student += '<tr>';
+                        student += '<td>' +  arr1[i].name + '</td>';
+                        student += '<td>' + arr1[i].major + '</td>';
+                        student += '<td>' + arr1[i].midterm + '</td>';
+                        student += '<td>' + arr1[i].final + '</td>';
+                        student += '</tr>';
+                    }
+                }
+                else
+                {
+                    for(let i=0;i<arr2.length;i++)
+                    {
+                        student += '<tr>';
+                        student += '<td>' +  arr2[i].name + '</td>';
+                        student += '<td>' + arr2[i].major + '</td>';
+                        student += '<td>' + arr2[i].midterm + '</td>';
+                        student += '<td>' + arr2[i].final + '</td>';
+                        student += '</tr>';
+                    }
+                }
+                $('#mytable tbody').append(student);
+        });
+    }
+</script>
+
 </html>
